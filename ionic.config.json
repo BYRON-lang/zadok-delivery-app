@@ -1,0 +1,7 @@
+{
+  "name": "zadok-delivery-app",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}
