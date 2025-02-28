@@ -1,0 +1,92 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>My Orders</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <!-- Order Status Filter -->
+  <ion-segment [(ngModel)]="selectedStatus" (ionChange)="filterOrders()" scrollable>
+    <ion-segment-button value="all">
+      <ion-label>All</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="pending">
+      <ion-label>Pending</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="confirmed">
+      <ion-label>Confirmed</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="preparing">
+      <ion-label>Preparing</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="out_for_delivery">
+      <ion-label>On Delivery</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="delivered">
+      <ion-label>Delivered</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="cancelled">
+      <ion-label>Cancelled</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+
+  <!-- Orders List -->
+  <div class="orders-container">
+    <div class="empty-state" *ngIf="filteredOrders.length === 0">
+      <ion-icon name="receipt-outline" size="large"></ion-icon>
+      <h2>No Orders Found</h2>
+      <p *ngIf="selectedStatus === 'all'">You haven't placed any orders yet</p>
+      <p *ngIf="selectedStatus !== 'all'">No orders with status: {{selectedStatus}}</p>
+      <ion-button expand="block" routerLink="/tabs/home">
+        Start Shopping
+      </ion-button>
+    </div>
+
+    <ion-list *ngIf="filteredOrders.length > 0">
+      <ion-item-group *ngFor="let order of filteredOrders">
+        <ion-item button detail="false" (click)="viewOrderDetails(order)">
+          <ion-thumbnail slot="start">
+            <img [src]="order.store.image" [alt]="order.store.name">
+          </ion-thumbnail>
+          <ion-label>
+            <h2>{{ order.store.name }}</h2>
+            <p class="order-info">
+              <ion-text color="medium">Order #{{ order.id }}</ion-text>
+              <ion-text color="medium"> • </ion-text>
+              <ion-text color="medium">{{ order.createdAt | date:'MMM d, y' }}</ion-text>
+            </p>
+            <p class="order-items">{{ getOrderSummary(order) }}</p>
+          </ion-label>
+          <div class="order-meta" slot="end">
+            <ion-badge [color]="getStatusColor(order.status)">
+              {{ order.status }}
+            </ion-badge>
+            <p class="order-total">${{ order.total.toFixed(2) }}</p>
+          </div>
+        </ion-item>
+
+        <ion-item-options side="end">
+          <ion-item-option color="primary" *ngIf="order.status === 'delivered'" (click)="reorderItems(order); $event.stopPropagation()">
+            <ion-icon slot="icon-only" name="repeat-outline"></ion-icon>
+            Reorder
+          </ion-item-option>
+          <ion-item-option color="danger" *ngIf="order.status === 'pending'" (click)="cancelOrder(order); $event.stopPropagation()">
+            <ion-icon slot="icon-only" name="close-outline"></ion-icon>
+            Cancel
+          </ion-item-option>
+        </ion-item-options>
+      </ion-item-group>
+    </ion-list>
+
+    <ion-infinite-scroll (ionInfinite)="loadMoreOrders($event)">
+      <ion-infinite-scroll-content
+        loadingSpinner="bubbles"
+        loadingText="Loading more orders...">
+      </ion-infinite-scroll-content>
+    </ion-infinite-scroll>
+  </div>
+</ion-content>

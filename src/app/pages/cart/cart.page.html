@@ -1,0 +1,110 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>My Cart</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div class="empty-cart" *ngIf="cartItems.length === 0">
+    <ion-icon name="cart-outline" size="large"></ion-icon>
+    <h2>Your cart is empty</h2>
+    <p>Browse our stores and add items to your cart</p>
+    <ion-button expand="block" routerLink="/tabs/home">
+      Start Shopping
+    </ion-button>
+  </div>
+
+  <div class="cart-content" *ngIf="cartItems.length > 0">
+    <!-- Store Information -->
+    <div class="store-info">
+      <ion-item lines="none">
+        <ion-avatar slot="start">
+          <img [src]="store?.image" alt="Store logo">
+        </ion-avatar>
+        <ion-label>
+          <h2>{{ store?.name }}</h2>
+          <p>
+            <ion-icon name="bicycle-outline"></ion-icon>
+            Delivery: ${{ store?.deliveryFee?.toFixed(2) || '0.00' }}
+          </p>
+        </ion-label>
+      </ion-item>
+    </div>
+
+    <!-- Cart Items -->
+    <ion-list>
+      <ion-item-sliding *ngFor="let item of cartItems">
+        <ion-item>
+          <ion-thumbnail slot="start">
+            <img [src]="item.product.image" [alt]="item.product.name">
+          </ion-thumbnail>
+          <ion-label>
+            <h3>{{ item.product.name }}</h3>
+            <p *ngIf="item.product.description">{{ item.product.description | slice:0:50 }}{{ item.product.description.length > 50 ? '...' : '' }}</p>
+            <p class="item-price">${{ (item.product.price * item.quantity).toFixed(2) }}</p>
+          </ion-label>
+          <div class="quantity-control">
+            <ion-button fill="clear" (click)="decreaseQuantity(item)">
+              <ion-icon name="remove-circle-outline"></ion-icon>
+            </ion-button>
+            <span class="quantity">{{ item.quantity }}</span>
+            <ion-button fill="clear" (click)="increaseQuantity(item)">
+              <ion-icon name="add-circle-outline"></ion-icon>
+            </ion-button>
+          </div>
+        </ion-item>
+        <ion-item-options side="end">
+          <ion-item-option color="danger" (click)="removeItem(item)">
+            <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+          </ion-item-option>
+        </ion-item-options>
+      </ion-item-sliding>
+    </ion-list>
+
+    <!-- Add More Items Button -->
+    <div class="add-more-section">
+      <ion-button expand="block" fill="outline" (click)="addMoreItems()">
+        <ion-icon name="add-outline" slot="start"></ion-icon>
+        Add More Items
+      </ion-button>
+    </div>
+
+    <!-- Order Summary -->
+    <div class="order-summary">
+      <h2>Order Summary</h2>
+      <div class="summary-item">
+        <span>Subtotal</span>
+        <span>${{ subtotal.toFixed(2) }}</span>
+      </div>
+      <div class="summary-item">
+        <span>Delivery Fee</span>
+        <span>${{ store?.deliveryFee?.toFixed(2) || '0.00' }}</span>
+      </div>
+      <div class="summary-item">
+        <span>Service Fee</span>
+        <span>${{ serviceFee.toFixed(2) }}</span>
+      </div>
+      <div class="summary-item total">
+        <span>Total</span>
+        <span>${{ total.toFixed(2) }}</span>
+      </div>
+    </div>
+
+    <!-- Promo Code -->
+    <div class="promo-section">
+      <ion-item>
+        <ion-input label="Promo Code" placeholder="Enter promo code" [(ngModel)]="promoCode"></ion-input>
+        <ion-button slot="end" fill="clear" (click)="applyPromoCode()">
+          Apply
+        </ion-button>
+      </ion-item>
+    </div>
+
+    <!-- Checkout Button -->
+    <div class="checkout-button">
+      <ion-button expand="block" (click)="proceedToCheckout()">
+        Proceed to Checkout
+      </ion-button>
+    </div>
+  </div>
+</ion-content>

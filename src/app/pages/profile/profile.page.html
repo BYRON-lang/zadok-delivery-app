@@ -1,0 +1,116 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Profile</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div class="profile-container ion-padding" *ngIf="user">
+    <!-- Profile Header -->
+    <div class="profile-header">
+      <ion-avatar class="profile-avatar">
+        <img [src]="user.profileImage || 'assets/images/default-avatar.png'" alt="Profile Image">
+      </ion-avatar>
+      <div class="profile-name">
+        <h2>{{ user.name }}</h2>
+        <p>{{ user.email }}</p>
+      </div>
+    </div>
+
+    <!-- Loyalty Points -->
+    <ion-card *ngIf="user.loyaltyPoints !== undefined">
+      <ion-card-header>
+        <ion-card-title>Loyalty Points</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <div class="loyalty-points">
+          <span class="points">{{ user.loyaltyPoints || 0 }}</span>
+          <p>Points earned</p>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Personal Information -->
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Personal Information</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-list lines="full">
+          <ion-item>
+            <ion-label position="stacked">Full Name</ion-label>
+            <ion-input [(ngModel)]="user.name"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label position="stacked">Email</ion-label>
+            <ion-input [(ngModel)]="user.email" type="email"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label position="stacked">Phone Number</ion-label>
+            <ion-input [(ngModel)]="user.phone" type="tel"></ion-input>
+          </ion-item>
+          <ion-button expand="block" (click)="updateProfile()" class="ion-margin-top">Save Changes</ion-button>
+        </ion-list>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Addresses -->
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Delivery Addresses</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-list lines="full">
+          <ion-item *ngFor="let address of user.addresses">
+            <ion-label>
+              <h3>{{ address.label }}</h3>
+              <p>{{ address.fullAddress }}</p>
+              <p>{{ address.city }}, {{ address.province }}</p>
+            </ion-label>
+            <ion-badge slot="end" *ngIf="address.isDefault" color="success">Default</ion-badge>
+          </ion-item>
+          <ion-item *ngIf="!user.addresses || user.addresses.length === 0">
+            <ion-label color="medium">No addresses added yet</ion-label>
+          </ion-item>
+          <ion-button expand="block" class="ion-margin-top">
+            <ion-icon name="add-outline" slot="start"></ion-icon>
+            Add New Address
+          </ion-button>
+        </ion-list>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Notification Preferences -->
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Notification Preferences</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-list lines="full">
+          <ion-item>
+            <ion-label>Order Updates</ion-label>
+            <ion-toggle [(ngModel)]="notificationPreferences.orderUpdates"></ion-toggle>
+          </ion-item>
+          <ion-item>
+            <ion-label>Promotions</ion-label>
+            <ion-toggle [(ngModel)]="notificationPreferences.promotions"></ion-toggle>
+          </ion-item>
+          <ion-item>
+            <ion-label>Special Deals</ion-label>
+            <ion-toggle [(ngModel)]="notificationPreferences.specialDeals"></ion-toggle>
+          </ion-item>
+          <ion-item>
+            <ion-label>Email Notifications</ion-label>
+            <ion-toggle [(ngModel)]="notificationPreferences.emailNotifications"></ion-toggle>
+          </ion-item>
+          <ion-button expand="block" (click)="saveNotificationPreferences()" class="ion-margin-top">Save Preferences</ion-button>
+      </ion-card-content>
+    </ion-card>
+
+    <div class="ion-padding">
+      <ion-button expand="block" color="danger" fill="outline" (click)="signOut()">
+        Sign Out
+      </ion-button>
+    </div>
+  </div>
+</ion-content>

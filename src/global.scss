@@ -25,13 +25,28 @@
 @import "@ionic/angular/css/text-transformation.css";
 @import "@ionic/angular/css/flex-utils.css";
 
-/**
- * Ionic Dark Mode
- * -----------------------------------------------------
- * For more info, please see:
- * https://ionicframework.com/docs/theming/dark-mode
- */
-
+/* Disable dark mode completely */
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
-@import '@ionic/angular/css/palettes/dark.system.css';
+/* @import '@ionic/angular/css/palettes/dark.system.css'; */
+
+/* Custom global styles */
+:root {
+  --ion-background-color: #ffffff !important;
+  --ion-text-color: #000000 !important;
+  --ion-toolbar-background: #ffffff !important;
+  --ion-item-background: #ffffff !important;
+}
+
+/* Ensure square cards with consistent styling */
+ion-card {
+  border-radius: var(--zadok-border-radius);
+  overflow: hidden;
+  margin: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* Ensure orange accent colors are used consistently */
+.primary-icon {
+  color: var(--ion-color-primary);
+}

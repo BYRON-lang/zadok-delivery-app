@@ -1,0 +1,152 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs/cart"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Checkout</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <!-- Order Summary -->
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Order Summary</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <div class="store-info">
+        <ion-item lines="none">
+          <ion-thumbnail slot="start">
+            <img [src]="store?.image" [alt]="store?.name">
+          </ion-thumbnail>
+          <ion-label>
+            <h2>{{ store?.name }}</h2>
+            <p>
+              <ion-icon name="bicycle-outline"></ion-icon>
+              Delivery: ${{ store?.deliveryFee.toFixed(2) }}
+            </p>
+          </ion-label>
+        </ion-item>
+      </div>
+
+      <div class="order-items">
+        <ion-list>
+          <ion-item *ngFor="let item of cartItems">
+            <ion-label>
+              <h3>{{ item.product.name }}</h3>
+              <p>{{ item.quantity }}x ${{ item.product.price.toFixed(2) }}</p>
+            </ion-label>
+            <ion-note slot="end" color="dark">
+              ${{ (item.quantity * item.product.price).toFixed(2) }}
+            </ion-note>
+          </ion-item>
+        </ion-list>
+      </div>
+
+      <div class="price-summary">
+        <ion-item lines="none">
+          <ion-label>Subtotal</ion-label>
+          <ion-note slot="end" color="dark">${{ subtotal.toFixed(2) }}</ion-note>
+        </ion-item>
+        <ion-item lines="none">
+          <ion-label>Delivery Fee</ion-label>
+          <ion-note slot="end" color="dark">${{ store?.deliveryFee.toFixed(2) }}</ion-note>
+        </ion-item>
+        <ion-item lines="none">
+          <ion-label>Service Fee</ion-label>
+          <ion-note slot="end" color="dark">${{ serviceFee.toFixed(2) }}</ion-note>
+        </ion-item>
+        <ion-item lines="none" *ngIf="promoDiscount > 0">
+          <ion-label>Discount</ion-label>
+          <ion-note slot="end" color="success">-${{ promoDiscount.toFixed(2) }}</ion-note>
+        </ion-item>
+        <ion-item lines="none" class="total">
+          <ion-label>Total</ion-label>
+          <ion-note slot="end" color="dark">${{ total.toFixed(2) }}</ion-note>
+        </ion-item>
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Delivery Details -->
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Delivery Details</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list>
+        <ion-item>
+          <ion-icon name="home-outline" slot="start"></ion-icon>
+          <ion-input
+            label="Delivery Address"
+            labelPlacement="stacked"
+            placeholder="Enter your delivery address"
+            [(ngModel)]="deliveryAddress"
+            required>
+          </ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-icon name="navigate-outline" slot="start"></ion-icon>
+          <ion-textarea
+            label="Delivery Instructions"
+            labelPlacement="stacked"
+            placeholder="Add any special delivery instructions (optional)"
+            [(ngModel)]="deliveryInstructions"
+            rows="3">
+          </ion-textarea>
+        </ion-item>
+
+        <ion-item>
+          <ion-icon name="call-outline" slot="start"></ion-icon>
+          <ion-input
+            label="Contact Phone"
+            labelPlacement="stacked"
+            type="tel"
+            placeholder="Enter your phone number"
+            [(ngModel)]="contactPhone"
+            required>
+          </ion-input>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Payment Method -->
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Payment Method</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-radio-group [(ngModel)]="paymentMethod">
+        <ion-item>
+          <ion-icon name="cash-outline" slot="start"></ion-icon>
+          <ion-label>
+            <h2>Cash on Delivery</h2>
+            <p>Pay with cash when your order arrives</p>
+          </ion-label>
+          <ion-radio slot="end" value="cash"></ion-radio>
+        </ion-item>
+        <ion-item>
+          <ion-icon name="card-outline" slot="start"></ion-icon>
+          <ion-label>
+            <h2>Card Payment</h2>
+            <p>Coming soon</p>
+          </ion-label>
+          <ion-radio slot="end" value="card" disabled></ion-radio>
+        </ion-item>
+      </ion-radio-group>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Place Order Button -->
+  <div class="place-order-button">
+    <ion-button expand="block" (click)="placeOrder()" [disabled]="!isFormValid()">
+      <ion-icon name="checkmark-circle-outline" slot="start"></ion-icon>
+      Place Order • ${{ total.toFixed(2) }}
+    </ion-button>
+    <p class="terms-text" *ngIf="paymentMethod === 'cash'">
+      By placing your order, you agree to pay the total amount in cash upon delivery
+    </p>
+  </div>
+</ion-content>

@@ -1,0 +1,112 @@
+<ion-header [translucent]="true" class="zadok-header">
+  <ion-toolbar>
+    <div class="location-container">
+      <ion-icon name="home" slot="start"></ion-icon>
+      <div class="location-text">
+        <ion-text color="medium" class="location-label">Deliver to</ion-text>
+        <ion-text class="address">Home • 123 Example Street</ion-text>
+      </div>
+    </div>
+    <ion-buttons slot="end">
+      <ion-button>
+        <ion-icon name="person-circle-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+  <ion-toolbar>
+    <ion-searchbar 
+      placeholder="Search for burgers, pizza, groceries..." 
+      [(ngModel)]="searchQuery" 
+      (ionChange)="onSearchChange($event)"
+      [debounce]="500"
+      showCancelButton="focus"
+      class="custom-searchbar"
+      animated>
+    </ion-searchbar>
+  </ion-toolbar>
+</ion-header>
+
+<div class="promo-banner">
+  <img src="assets/images/promo-banner.jpg" alt="Special offer on burgers">
+  <div class="promo-content">
+    <h2>Hungry?</h2>
+    <p>Get up to 50% off on your favorite burgers</p>
+  </div>
+</div>
+
+<ion-content [fullscreen]="true">
+  <ion-segment [(ngModel)]="selectedSegment" (ionChange)="segmentChanged()">
+    <ion-segment-button value="all">
+      <ion-label>All</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="food">
+      <ion-label>Food</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="grocery">
+      <ion-label>Grocery</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="medicine">
+      <ion-label>Pharmacy</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+
+  <ion-list lines="none" class="filter-list">
+    <ion-item button (click)="openFilterOptions()">
+      <ion-icon name="options-outline" slot="start"></ion-icon>
+      <ion-label>Filter</ion-label>
+      <ion-badge color="primary" *ngIf="activeFilters > 0">{{ activeFilters }}</ion-badge>
+    </ion-item>
+    <ion-item button (click)="openSortOptions()">
+      <ion-icon name="swap-vertical-outline" slot="start"></ion-icon>
+      <ion-label>Sort By: {{ getSortLabel() }}</ion-label>
+    </ion-item>
+  </ion-list>
+
+  <div *ngIf="isLoading" class="loading-container">
+    <ion-spinner name="crescent"></ion-spinner>
+    <p>Searching...</p>
+  </div>
+
+  <div *ngIf="!isLoading && products.length === 0" class="empty-state">
+    <ion-icon name="search-outline" size="large"></ion-icon>
+    <h3>No Results Found</h3>
+    <p>Try adjusting your search or filters</p>
+  </div>
+
+  <ion-list *ngIf="!isLoading && products.length > 0">
+    <ion-item-group>
+      <ion-item-divider sticky>
+        <ion-label>
+          {{ products.length }} {{ products.length === 1 ? 'Product' : 'Products' }} Found
+        </ion-label>
+      </ion-item-divider>
+      
+      <ion-item *ngFor="let product of products" detail="false" button (click)="openProduct(product)">
+        <ion-thumbnail slot="start">
+          <img [src]="product.image" [alt]="product.name">
+        </ion-thumbnail>
+        <ion-label>
+          <h2>{{ product.name }}</h2>
+          <p class="product-description">{{ product.description }}</p>
+          <p class="store-info">
+            <ion-icon name="storefront-outline"></ion-icon>
+            {{ getStoreName(product.storeId) }}
+          </p>
+        </ion-label>
+        <div class="product-meta" slot="end">
+          <span class="product-price">${{ product.price.toFixed(2) }}</span>
+          <ion-badge [color]="product.available ? 'success' : 'danger'" class="status-badge">
+            {{ product.available ? 'Available' : 'Out of Stock' }}
+          </ion-badge>
+        </div>
+      </ion-item>
+    </ion-item-group>
+  </ion-list>
+
+  <ion-infinite-scroll (ionInfinite)="loadMoreStores($event)" [disabled]="!hasMoreProducts">
+    <ion-infinite-scroll-content
+      loadingSpinner="bubbles"
+      loadingText="Loading more products...">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+</ion-content>

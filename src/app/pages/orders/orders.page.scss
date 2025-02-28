@@ -1,0 +1,120 @@
+.orders-container {
+  padding: 16px;
+}
+
+ion-segment {
+  padding: 8px 16px;
+  --background: var(--ion-color-light);
+  border-radius: 0;
+  margin-bottom: 16px;
+  overflow-x: auto;
+  
+  ion-segment-button {
+    --color: var(--ion-color-medium);
+    --color-checked: var(--ion-color-primary);
+    --indicator-color: var(--ion-color-primary);
+    min-width: 100px;
+    
+    ion-label {
+      font-size: 14px;
+      text-transform: none;
+    }
+  }
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 24px;
+  text-align: center;
+  height: 50vh;
+  
+  ion-icon {
+    font-size: 64px;
+    color: var(--ion-color-medium);
+    margin-bottom: 16px;
+  }
+  
+  h2 {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+  
+  p {
+    color: var(--ion-color-medium);
+    margin-bottom: 24px;
+  }
+  
+  ion-button {
+    margin-top: 16px;
+    max-width: 200px;
+  }
+}
+
+ion-list {
+  background: transparent;
+  padding: 0;
+  
+  ion-item {
+    --padding-start: 0;
+    --inner-padding-end: 0;
+    margin-bottom: 12px;
+    border-radius: 12px;
+    --background: var(--ion-color-light);
+    
+    ion-thumbnail {
+      width: 70px;
+      height: 70px;
+      --border-radius: 8px;
+      margin: 8px;
+    }
+    
+    ion-label {
+      h2 {
+        font-size: 16px;
+        font-weight: 600;
+        margin-bottom: 4px;
+      }
+      
+      .order-info {
+        font-size: 13px;
+        margin-bottom: 4px;
+      }
+      
+      .order-items {
+        font-size: 14px;
+        color: var(--ion-color-dark);
+      }
+    }
+    
+    .order-meta {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      padding-right: 16px;
+      
+      ion-badge {
+        margin-bottom: 8px;
+        --padding-start: 8px;
+        --padding-end: 8px;
+        --padding-top: 4px;
+        --padding-bottom: 4px;
+        font-size: 12px;
+        font-weight: 500;
+      }
+      
+      .order-total {
+        font-size: 14px;
+        font-weight: 600;
+        margin: 0;
+      }
+    }
+  }
+}
+
+ion-infinite-scroll {
+  margin-top: 16px;
+}

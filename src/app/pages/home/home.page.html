@@ -1,0 +1,137 @@
+<ion-header class="modern-header" [translucent]="true">
+  <ion-toolbar>
+    <div class="header-content">
+      <div class="location-info">
+        <ion-icon name="home-outline" class="home-icon"></ion-icon>
+        <div class="address-details">
+          <span class="delivery-label">Delivery to</span>
+          <ion-button fill="clear" class="address-button" (click)="openLocationSelector()">
+            <span class="current-location">{{ currentCity || 'Select Location' }}</span>
+            <ion-icon name="chevron-down-outline"></ion-icon>
+          </ion-button>
+        </div>
+      </div>
+      <ion-buttons slot="end">
+        <ion-button routerLink="/profile">
+          <ion-icon slot="icon-only" name="person-outline"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <!-- Categories -->
+  <div class="category-section">
+    <h2 class="section-title">Categories</h2>
+    <div class="category-container">
+      <ion-button 
+        *ngFor="let category of categories" 
+        class="category-button" 
+        fill="clear"
+        (click)="navigateToCategory(category.value)">
+        <div class="category-content">
+          <ion-icon [name]="category.icon"></ion-icon>
+          <ion-label>{{ category.name }}</ion-label>
+        </div>
+      </ion-button>
+    </div>
+  </div>
+
+  <!-- Featured Banners Slider -->
+  <div class="banner-section">
+    <swiper-container 
+      initial-slide="0"
+      speed="400"
+      loop="true"
+      slides-per-view="1.2"
+      space-between="16"
+      direction="horizontal"
+      centered-slides="true"
+      pagination="true"
+      effect="slide"
+      grab-cursor="true"
+      autoplay-delay="3000"
+      autoplay-disable-on-interaction="false"
+      class="banner-slides">
+      <swiper-slide *ngFor="let banner of promotionBanners">
+        <ion-card class="banner-card">
+          <img [src]="banner.image" [alt]="banner.title">
+          <div class="banner-content">
+            <h2>{{ banner.title }}</h2>
+            <p>{{ banner.description }}</p>
+          </div>
+        </ion-card>
+      </swiper-slide>
+    </swiper-container>
+  </div>
+
+  <!-- Featured Stores -->
+  <div class="stores-section">
+    <div class="section-header">
+      <h2 class="section-title">Featured Stores</h2>
+      <ion-button fill="clear" size="small" (click)="viewAllStores()">
+        View All
+        <ion-icon name="chevron-forward-outline" slot="end"></ion-icon>
+      </ion-button>
+    </div>
+
+    <div class="store-grid" *ngIf="featuredStores.length > 0">
+      <ion-card *ngFor="let store of featuredStores.slice(0, 4)" class="store-card" (click)="openStore(store)">
+        <img [src]="store.image" [alt]="store.name">
+        <ion-card-header>
+          <ion-card-title>{{ store.name }}</ion-card-title>
+          <ion-card-subtitle>
+            <ion-icon name="star" color="warning"></ion-icon>
+            {{ store.rating }} • {{ store.deliveryTime }}
+          </ion-card-subtitle>
+        </ion-card-header>
+        <ion-card-content>
+          <p class="store-tags">{{ store.tags.join(' • ') }}</p>
+          <p class="delivery-fee">
+            <ion-icon name="bicycle-outline"></ion-icon>
+            Delivery: ${{ store.deliveryFee.toFixed(2) }}
+          </p>
+        </ion-card-content>
+      </ion-card>
+    </div>
+
+    <div *ngIf="featuredStores.length === 0" class="empty-state">
+      <ion-icon name="storefront-outline" size="large"></ion-icon>
+      <p>No featured stores available in your area</p>
+    </div>
+  </div>
+
+  <!-- Recent Orders (if user is logged in) -->
+  <div class="recent-orders-section" *ngIf="isLoggedIn && recentOrders.length > 0">
+    <div class="section-header">
+      <h2 class="section-title">Recent Orders</h2>
+      <ion-button fill="clear" size="small" routerLink="/tabs/orders">
+        View All
+        <ion-icon name="chevron-forward-outline" slot="end"></ion-icon>
+      </ion-button>
+    </div>
+
+    <div class="order-list">
+      <ion-card *ngFor="let order of recentOrders" class="order-card" (click)="viewOrderDetails(order)">
+        <ion-card-header>
+          <ion-card-title>{{ order.store.name }}</ion-card-title>
+          <ion-card-subtitle>
+            <ion-badge [color]="getStatusColor(order.status)">{{ order.status }}</ion-badge>
+            <span class="order-date">{{ order.createdAt | date:'medium' }}</span>
+          </ion-card-subtitle>
+        </ion-card-header>
+        <ion-card-content>
+          <p>{{ getOrderSummary(order) }}</p>
+          <ion-button fill="outline" size="small" (click)="reorderItems(order); $event.stopPropagation()">
+            Reorder
+          </ion-button>
+        </ion-card-content>
+      </ion-card>
+    </div>
+  </div>
+</ion-content>
