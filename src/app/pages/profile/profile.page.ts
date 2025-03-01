@@ -1,9 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { 
-  IonHeader, 
-  IonToolbar, 
-  IonTitle, 
   IonContent,
   IonList,
   IonItem,
@@ -39,6 +36,8 @@ import {
 } from 'ionicons/icons';
 import { AuthService } from '../../services/auth.service';
 import { User, NotificationPreferences } from '../../models/user.model';
+import { HeaderComponent } from '../../components/shared/header/header.component';
+import { OrderHistoryComponent } from '../../components/order-history/order-history.component';
 
 @Component({
   selector: 'app-profile',
@@ -46,9 +45,6 @@ import { User, NotificationPreferences } from '../../models/user.model';
   styleUrls: ['./profile.page.scss'],
   standalone: true,
   imports: [
-    IonHeader, 
-    IonToolbar, 
-    IonTitle, 
     IonContent,
     IonList,
     IonItem,
@@ -65,7 +61,9 @@ import { User, NotificationPreferences } from '../../models/user.model';
     IonBadge,
     NgIf,
     NgForOf,
-    FormsModule
+    FormsModule,
+    HeaderComponent,
+    OrderHistoryComponent
   ]
 })
 export class ProfilePage implements OnInit {
@@ -73,7 +71,8 @@ export class ProfilePage implements OnInit {
   notificationPreferences: NotificationPreferences = {
     orderUpdates: true,
     promotions: false,
-    specialDeals: false
+    specialDeals: false,
+    emailNotifications: false
   };
 
   constructor(
@@ -103,7 +102,19 @@ export class ProfilePage implements OnInit {
   }
 
   async loadUserData() {
-    // Implement user data loading logic
+    const user = this.authService.getCurrentUser();
+    if (user) {
+      this.user = user;
+    } else {
+      const toast = await this.toastController.create({
+        message: 'Please sign in to view your profile',
+        duration: 2000,
+        position: 'bottom',
+        color: 'warning'
+      });
+      await toast.present();
+      this.router.navigate(['/login']);
+    }
   }
 
   async updateProfile() {

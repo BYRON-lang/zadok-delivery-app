@@ -1,24 +1,8 @@
-<ion-header class="modern-header" [translucent]="true">
-  <ion-toolbar>
-    <div class="header-content">
-      <div class="location-info">
-        <ion-icon name="home-outline" class="home-icon"></ion-icon>
-        <div class="address-details">
-          <span class="delivery-label">Delivery to</span>
-          <ion-button fill="clear" class="address-button" (click)="openLocationSelector()">
-            <span class="current-location">{{ currentCity || 'Select Location' }}</span>
-            <ion-icon name="chevron-down-outline"></ion-icon>
-          </ion-button>
-        </div>
-      </div>
-      <ion-buttons slot="end">
-        <ion-button routerLink="/profile">
-          <ion-icon slot="icon-only" name="person-outline"></ion-icon>
-        </ion-button>
-      </ion-buttons>
-    </div>
-  </ion-toolbar>
-</ion-header>
+<app-header
+  [showLocationSelector]="true"
+  [currentLocation]="currentCity"
+  [showProfileButton]="true">
+</app-header>
 
 <ion-content [fullscreen]="true">
   <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
@@ -35,7 +19,7 @@
         fill="clear"
         (click)="navigateToCategory(category.value)">
         <div class="category-content">
-          <ion-icon [name]="category.icon"></ion-icon>
+          <ion-icon [name]="category.icon" class="category-icon"></ion-icon>
           <ion-label>{{ category.name }}</ion-label>
         </div>
       </ion-button>

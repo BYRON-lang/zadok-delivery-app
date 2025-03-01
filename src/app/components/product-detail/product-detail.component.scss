@@ -1,0 +1,129 @@
+.product-detail-content {
+  --background: var(--ion-color-light);
+
+  .product-image-container {
+    width: 100%;
+    height: 300px;
+    overflow: hidden;
+    position: relative;
+
+    .product-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  .product-info {
+    padding: 20px;
+    border-radius: 24px 24px 0 0;
+    background: var(--ion-color-light);
+    margin-top: -24px;
+    position: relative;
+    z-index: 1;
+
+    .product-header {
+      margin-bottom: 16px;
+
+      .product-name {
+        font-size: 24px;
+        font-weight: 600;
+        margin: 0 0 8px 0;
+        color: var(--ion-color-dark);
+      }
+
+      .rating {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+
+        ion-icon {
+          font-size: 18px;
+        }
+
+        ion-text {
+          font-size: 16px;
+        }
+      }
+    }
+
+    .product-meta {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 16px;
+
+      .meta-item {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+
+        ion-icon {
+          font-size: 18px;
+          color: var(--ion-color-medium);
+        }
+
+        ion-text {
+          font-size: 14px;
+          color: var(--ion-color-medium);
+        }
+      }
+    }
+
+    .product-description {
+      font-size: 14px;
+      line-height: 1.5;
+      color: var(--ion-color-medium);
+      margin-bottom: 24px;
+    }
+
+    .quantity-selector {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      margin-bottom: 24px;
+
+      ion-button {
+        --padding-start: 8px;
+        --padding-end: 8px;
+        height: 36px;
+        width: 36px;
+
+        ion-icon {
+          font-size: 24px;
+        }
+      }
+
+      .quantity {
+        font-size: 18px;
+        font-weight: 600;
+        min-width: 24px;
+        text-align: center;
+      }
+    }
+
+    .add-to-cart-button {
+      margin: 0;
+      --border-radius: 12px;
+      font-weight: 600;
+      font-size: 16px;
+    }
+  }
+}
+
+ion-header {
+  position: absolute;
+  
+  ion-toolbar {
+    --background: transparent;
+    --border-width: 0;
+    
+    ion-button {
+      --background: rgba(255, 255, 255, 0.9);
+      --border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      margin: 8px;
+    }
+  }
+}

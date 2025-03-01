@@ -1,11 +1,8 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-back-button defaultHref="/tabs/cart"></ion-back-button>
-    </ion-buttons>
-    <ion-title>Checkout</ion-title>
-  </ion-toolbar>
-</ion-header>
+<app-header
+  [title]="'Checkout'"
+  [showBackButton]="true"
+  [showProfileButton]="false">
+</app-header>
 
 <ion-content [fullscreen]="true">
   <!-- Order Summary -->

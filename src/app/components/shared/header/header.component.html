@@ -1,0 +1,32 @@
+<ion-header class="glassmorphic-header" [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start" *ngIf="showBackButton">
+      <ion-back-button defaultHref="/"></ion-back-button>
+    </ion-buttons>
+
+    <div class="header-content">
+      <ng-container *ngIf="showLocationSelector; else titleTemplate">
+        <div class="location-info">
+          <ion-icon name="location-outline" class="location-icon"></ion-icon>
+          <div class="address-details">
+            <span class="delivery-label">Delivery to</span>
+            <ion-button fill="clear" class="address-button" (click)="openLocationSelector()">
+              <span class="current-location">{{ currentLocation || 'Select Location' }}</span>
+              <ion-icon name="chevron-down-outline"></ion-icon>
+            </ion-button>
+          </div>
+        </div>
+      </ng-container>
+
+      <ng-template #titleTemplate>
+        <ion-title class="modern-title">{{ title }}</ion-title>
+      </ng-template>
+
+      <ion-buttons slot="end" *ngIf="showProfileButton">
+        <ion-button routerLink="/profile" class="profile-button">
+          <ion-icon slot="icon-only" name="person-outline"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </div>
+  </ion-toolbar>
+</ion-header>

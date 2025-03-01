@@ -89,7 +89,7 @@ export class CartService {
       this.cartItemsSubject.next(updatedCart);
     } else {
       // Add new item to cart
-      const newItem: CartItem = { product, quantity };
+      const newItem: CartItem = { product, quantity, store };
       this.cartItemsSubject.next([...currentCart, newItem]);
     }
     
@@ -159,5 +159,25 @@ export class CartService {
 
   async getCartStore(): Promise<Store | null> {
     return this.currentStoreSubject.value;
+  }
+
+  // Add method to remove a cart item by reference
+  async removeItem(item: CartItem) {
+    if (item.product.id) {
+      await this.removeFromCart(item.product.id);
+    } else {
+      // If for some reason the product doesn't have an ID, remove by reference
+      const currentCart = this.cartItemsSubject.value;
+      const updatedCart = currentCart.filter(i => i !== item);
+      this.cartItemsSubject.next(updatedCart);
+      
+      // If cart is empty, clear current store
+      if (updatedCart.length === 0) {
+        this.currentStoreSubject.next(null);
+        await Preferences.remove({ key: this.STORE_STORAGE_KEY });
+      }
+      
+      await this.saveCart();
+    }
   }
 }

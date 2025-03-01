@@ -1,110 +1,146 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>My Cart</ion-title>
-  </ion-toolbar>
-</ion-header>
+<app-header
+  [title]="'Shopping Cart'"
+  [showBackButton]="true"
+  [showProfileButton]="false">
+</app-header>
 
-<ion-content [fullscreen]="true">
-  <div class="empty-cart" *ngIf="cartItems.length === 0">
+<ion-content class="ion-padding">
+  <!-- Empty Cart Message -->
+  <div *ngIf="cartItems.length === 0" class="ion-text-center ion-padding">
     <ion-icon name="cart-outline" size="large"></ion-icon>
     <h2>Your cart is empty</h2>
-    <p>Browse our stores and add items to your cart</p>
-    <ion-button expand="block" routerLink="/tabs/home">
-      Start Shopping
-    </ion-button>
+    <p>Start adding items to your cart!</p>
   </div>
 
-  <div class="cart-content" *ngIf="cartItems.length > 0">
-    <!-- Store Information -->
-    <div class="store-info">
-      <ion-item lines="none">
-        <ion-avatar slot="start">
-          <img [src]="store?.image" alt="Store logo">
-        </ion-avatar>
-        <ion-label>
-          <h2>{{ store?.name }}</h2>
-          <p>
-            <ion-icon name="bicycle-outline"></ion-icon>
-            Delivery: ${{ store?.deliveryFee?.toFixed(2) || '0.00' }}
-          </p>
-        </ion-label>
-      </ion-item>
-    </div>
+  <!-- Cart Items List -->
+  <ng-container *ngFor="let vendor of groupItemsByVendor() | keyvalue">
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>{{vendor.key}}</ion-card-title>
+      </ion-card-header>
 
-    <!-- Cart Items -->
-    <ion-list>
-      <ion-item-sliding *ngFor="let item of cartItems">
+      <ion-card-content>
+        <!-- Special Instructions -->
         <ion-item>
+          <ion-input
+            label="Special Instructions"
+            [(ngModel)]="specialInstructions[vendor.key]"
+            (ionChange)="updateSpecialInstructions(vendor.key, specialInstructions[vendor.key])"
+            placeholder="Add notes for the vendor..."
+          ></ion-input>
+        </ion-item>
+
+        <!-- Items from this vendor -->
+        <ion-list>
+          <ion-item-sliding *ngFor="let item of vendor.value">
+            <!-- Item Details -->
+            <ion-item>
+              <ion-thumbnail slot="start">
+                <img [src]="item.product.image" [alt]="item.product.name">
+              </ion-thumbnail>
+              <ion-label>
+                <h3>{{item.product.name}}</h3>
+                <p>{{item.product.price | currency}}</p>
+                <ion-badge color="danger" *ngIf="!checkItemAvailability(item)">Out of Stock</ion-badge>
+              </ion-label>
+              <ion-note slot="end" color="primary">{{item.product.price * item.quantity | currency}}</ion-note>
+            </ion-item>
+
+            <!-- Quantity Controls -->
+            <ion-item>
+              <ion-buttons slot="start">
+                <ion-button (click)="updateQuantity(item, -1)">
+                  <ion-icon name="remove-circle-outline"></ion-icon>
+                </ion-button>
+                <ion-text>{{item.quantity}}</ion-text>
+                <ion-button (click)="updateQuantity(item, 1)">
+                  <ion-icon name="add-circle-outline"></ion-icon>
+                </ion-button>
+              </ion-buttons>
+            </ion-item>
+
+            <!-- Sliding Options -->
+            <ion-item-options side="end">
+              <ion-item-option color="danger" (click)="removeItem(item)">
+                <ion-icon slot="icon-only" name="trash"></ion-icon>
+              </ion-item-option>
+              <ion-item-option color="tertiary" (click)="saveForLater(item)">
+                <ion-icon slot="icon-only" name="heart"></ion-icon>
+              </ion-item-option>
+            </ion-item-options>
+          </ion-item-sliding>
+        </ion-list>
+      </ion-card-content>
+    </ion-card>
+  </ng-container>
+
+  <!-- Saved Items -->
+  <ion-card *ngIf="savedItems.length > 0">
+    <ion-card-header>
+      <ion-card-title>Saved for Later</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list>
+        <ion-item *ngFor="let item of savedItems">
           <ion-thumbnail slot="start">
             <img [src]="item.product.image" [alt]="item.product.name">
           </ion-thumbnail>
           <ion-label>
-            <h3>{{ item.product.name }}</h3>
-            <p *ngIf="item.product.description">{{ item.product.description | slice:0:50 }}{{ item.product.description.length > 50 ? '...' : '' }}</p>
-            <p class="item-price">${{ (item.product.price * item.quantity).toFixed(2) }}</p>
+            <h3>{{item.product.name}}</h3>
+            <p>{{item.product.price | currency}}</p>
           </ion-label>
-          <div class="quantity-control">
-            <ion-button fill="clear" (click)="decreaseQuantity(item)">
-              <ion-icon name="remove-circle-outline"></ion-icon>
-            </ion-button>
-            <span class="quantity">{{ item.quantity }}</span>
-            <ion-button fill="clear" (click)="increaseQuantity(item)">
-              <ion-icon name="add-circle-outline"></ion-icon>
-            </ion-button>
-          </div>
+          <ion-button slot="end" (click)="moveToCart(item)">
+            Add to Cart
+          </ion-button>
         </ion-item>
-        <ion-item-options side="end">
-          <ion-item-option color="danger" (click)="removeItem(item)">
-            <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
-          </ion-item-option>
-        </ion-item-options>
-      </ion-item-sliding>
-    </ion-list>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
 
-    <!-- Add More Items Button -->
-    <div class="add-more-section">
-      <ion-button expand="block" fill="outline" (click)="addMoreItems()">
-        <ion-icon name="add-outline" slot="start"></ion-icon>
-        Add More Items
-      </ion-button>
-    </div>
-
-    <!-- Order Summary -->
-    <div class="order-summary">
-      <h2>Order Summary</h2>
-      <div class="summary-item">
-        <span>Subtotal</span>
-        <span>${{ subtotal.toFixed(2) }}</span>
-      </div>
-      <div class="summary-item">
-        <span>Delivery Fee</span>
-        <span>${{ store?.deliveryFee?.toFixed(2) || '0.00' }}</span>
-      </div>
-      <div class="summary-item">
-        <span>Service Fee</span>
-        <span>${{ serviceFee.toFixed(2) }}</span>
-      </div>
-      <div class="summary-item total">
-        <span>Total</span>
-        <span>${{ total.toFixed(2) }}</span>
-      </div>
-    </div>
-
-    <!-- Promo Code -->
-    <div class="promo-section">
+  <!-- Price Breakdown -->
+  <ion-card *ngIf="cartItems.length > 0">
+    <ion-card-header>
+      <ion-card-title>Order Summary</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <!-- Promo Code -->
       <ion-item>
-        <ion-input label="Promo Code" placeholder="Enter promo code" [(ngModel)]="promoCode"></ion-input>
-        <ion-button slot="end" fill="clear" (click)="applyPromoCode()">
-          Apply
-        </ion-button>
+        <ion-input
+          label="Promo Code"
+          [(ngModel)]="promoCode"
+          placeholder="Enter promo code"
+        ></ion-input>
+        <ion-button slot="end" (click)="applyPromoCode()">Apply</ion-button>
       </ion-item>
-    </div>
 
-    <!-- Checkout Button -->
-    <div class="checkout-button">
-      <ion-button expand="block" (click)="proceedToCheckout()">
-        Proceed to Checkout
-      </ion-button>
-    </div>
-  </div>
+      <!-- Price Details -->
+      <ion-list>
+        <ion-item>
+          <ion-label>Subtotal</ion-label>
+          <ion-note slot="end" color="medium">{{subtotal | currency}}</ion-note>
+        </ion-item>
+        <ion-item>
+          <ion-label>Delivery Fee</ion-label>
+          <ion-note slot="end" color="medium">{{deliveryFee | currency}}</ion-note>
+        </ion-item>
+        <ion-item>
+          <ion-label>VAT (15%)</ion-label>
+          <ion-note slot="end" color="medium">{{tax | currency}}</ion-note>
+        </ion-item>
+        <ion-item>
+          <ion-label><strong>Total</strong></ion-label>
+          <ion-note slot="end" color="primary"><strong>{{total | currency}}</strong></ion-note>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
 </ion-content>
+
+<!-- Checkout Button -->
+<ion-footer *ngIf="cartItems.length > 0">
+  <ion-toolbar>
+    <ion-button expand="block" class="ion-margin">
+      Proceed to Checkout
+    </ion-button>
+  </ion-toolbar>
+</ion-footer>

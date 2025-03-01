@@ -2,8 +2,6 @@ import { Component, OnInit, CUSTOM_ELEMENTS_SCHEMA, AfterViewInit } from '@angul
 import { register } from 'swiper/element/bundle';
 import { Router } from '@angular/router';
 import { 
-  IonHeader, 
-  IonToolbar, 
   IonTitle, 
   IonContent, 
   IonRefresher, 
@@ -50,6 +48,7 @@ import { LocationService } from '../../services/location.service';
 import { Store } from '../../models/store.model';
 import { Order, OrderStatus } from '../../models/order.model';
 import { ProductCategory } from '../../models/product.model';
+import { HeaderComponent } from '../../components/header/header.component';
 
 @Component({
   selector: 'app-home',
@@ -57,89 +56,25 @@ import { ProductCategory } from '../../models/product.model';
   styleUrls: ['home.page.scss'],
   standalone: true,
   imports: [
-    IonHeader, 
-    IonToolbar, 
-    IonTitle, 
     IonContent, 
     IonRefresher, 
     IonRefresherContent, 
     IonButton, 
     IonIcon, 
     IonLabel, 
-    IonCard, 
-    IonCardHeader, 
-    IonCardTitle, 
-    IonCardSubtitle, 
-    IonCardContent, 
     IonBadge,
     NgIf, 
     NgForOf, 
-    DatePipe
+    DatePipe,
+    HeaderComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class HomePage implements OnInit, AfterViewInit {
-  ngAfterViewInit() {
-    register();
-  }
-  slideOpts = {
-    initialSlide: 0,
-    speed: 400,
-    autoplay: {
-      delay: 3000,
-      disableOnInteraction: false
-    },
-    loop: true,
-    slidesPerView: 1.2,
-    spaceBetween: 16,
-    direction: 'horizontal',
-    centeredSlides: true,
-    pagination: true,
-    effect: 'slide',
-    grabCursor: true,
-    breakpoints: {
-      640: {
-        slidesPerView: 2.2
-      },
-      768: {
-        slidesPerView: 2.5
-      }
-    }
-  };
-
-  promotionBanners = [
-    {
-      title: 'Free Delivery on First Order',
-      description: 'Use code WELCOME at checkout',
-      image: 'assets/images/banners/banner1.jpg'
-    },
-    {
-      title: '20% Off Groceries',
-      description: 'Valid until March 31st',
-      image: 'assets/images/banners/banner2.jpg'
-    },
-    {
-      title: 'Fast Medicine Delivery',
-      description: 'Get your medicines in under 1 hour',
-      image: 'assets/images/banners/banner3.jpg'
-    }
-  ];
-
-  categories = [
-    { name: 'Food', icon: 'fastFoodOutline', value: ProductCategory.FOOD },
-    { name: 'Grocery', icon: 'basketOutline', value: ProductCategory.GROCERY },
-    { name: 'Pharmacy', icon: 'medkitOutline', value: ProductCategory.MEDICINE },
-    { name: 'Desserts', icon: 'iceCreamOutline', value: ProductCategory.DESSERTS },
-    { name: 'Healthy', icon: 'leafOutline', value: ProductCategory.HEALTHY },
-    { name: 'Drinks', icon: 'wineOutline', value: ProductCategory.DRINKS },
-    { name: 'Snacks', icon: 'pizzaOutline', value: ProductCategory.SNACKS },
-    { name: 'Ethnic', icon: 'earthOutline', value: ProductCategory.ETHNIC }
-  ];
-
+  currentCity: string | null = null;
   featuredStores: Store[] = [];
   recentOrders: Order[] = [];
   isLoggedIn = false;
-  currentCity: string | null = null;
 
   constructor(
     private storeService: StoreService,
@@ -172,6 +107,63 @@ export class HomePage implements OnInit, AfterViewInit {
       earthOutline
     });
   }
+
+  ngAfterViewInit() {
+    register();
+  }
+  slideOpts = {
+    initialSlide: 0,
+    speed: 400,
+    autoplay: {
+      delay: 3000,
+      disableOnInteraction: false
+    },
+    loop: true,
+    slidesPerView: 1.2,
+    spaceBetween: 16,
+    direction: 'horizontal',
+    centeredSlides: true,
+    pagination: true,
+    effect: 'slide',
+    grabCursor: true,
+    breakpoints: {
+      640: {
+        slidesPerView: 2.2
+      },
+      768: {
+        slidesPerView: 2.5
+      }
+    }
+  };
+
+  promotionBanners = [
+    {
+      title: 'Special Chicken Inn Deals',
+      description: 'Get amazing deals on our famous chicken meals',
+      image: 'assets/images/banners/chicken inn banner.jfif'
+    },
+    {
+      title: 'Fresh Groceries Delivered',
+      description: 'Quality products from OK Zimbabwe',
+      image: 'assets/images/banners/grocery.jfif'
+    },
+    {
+      title: 'Pizza & Snacks',
+      description: 'Delicious pizzas and snacks delivered to you',
+      image: 'assets/images/banners/pizza veg.jpg'
+    }
+  ];
+
+  categories = [
+    { name: 'Food', icon: 'fastFoodOutline', value: ProductCategory.FOOD, image: 'assets/images/categories/food.jpg' },
+    { name: 'Grocery', icon: 'basketOutline', value: ProductCategory.GROCERY, image: 'assets/images/categories/grocery.jpg' },
+    { name: 'Pharmacy', icon: 'medkitOutline', value: ProductCategory.MEDICINE, image: 'assets/images/categories/pharmacy.jpg' },
+    { name: 'Desserts', icon: 'iceCreamOutline', value: ProductCategory.DESSERTS, image: 'assets/images/categories/desserts.jpg' },
+    { name: 'Healthy', icon: 'leafOutline', value: ProductCategory.HEALTHY, image: 'assets/images/categories/healthy.jpg' },
+    { name: 'Drinks', icon: 'wineOutline', value: ProductCategory.DRINKS, image: 'assets/images/categories/drinks.jpg' },
+    { name: 'Snacks', icon: 'pizzaOutline', value: ProductCategory.SNACKS, image: 'assets/images/categories/snacks.jpg' },
+    { name: 'Ethnic', icon: 'earthOutline', value: ProductCategory.ETHNIC, image: 'assets/images/categories/ethnic.jpg' }
+  ];
 
   async ngOnInit() {
     await this.checkAuthStatus();
@@ -283,22 +275,32 @@ export class HomePage implements OnInit, AfterViewInit {
     await actionSheet.present();
   }
 
+  async showErrorToast(message: string) {
+    const toast = await this.toastController.create({
+      message: message,
+      duration: 2000,
+      color: 'danger',
+      position: 'bottom'
+    });
+    toast.present();
+  }
+
   navigateToCategory(category: ProductCategory) {
-    this.router.navigate(['/tabs/search'], { 
-      queryParams: { category } 
+    this.router.navigate(['/stores'], {
+      queryParams: { category }
     });
   }
 
   viewAllStores() {
-    this.router.navigate(['/tabs/search']);
+    this.router.navigate(['/tabs/stores']);
   }
 
   openStore(store: Store) {
-    this.router.navigate(['/store', store.id]);
+    this.router.navigate(['/tabs/stores', store.id]);
   }
 
   viewOrderDetails(order: Order) {
-    this.router.navigate(['/order-details', order.id]);
+    this.router.navigate(['/tabs/orders', order.id]);
   }
 
   getStatusColor(status: OrderStatus): string {
@@ -321,65 +323,43 @@ export class HomePage implements OnInit, AfterViewInit {
   }
 
   getOrderSummary(order: Order): string {
-    if (order.items.length === 0) return 'No items';
-    
-    const itemCount = order.items.reduce((total, item) => total + item.quantity, 0);
-    const firstItem = order.items[0].product.name;
-    
-    if (order.items.length === 1) {
-      return `${itemCount}x ${firstItem}`;
-    } else {
-      return `${itemCount}x ${firstItem} and ${order.items.length - 1} more items`;
-    }
+    return order.items
+      .map(item => `${item.quantity}x ${item.product.name}`)
+      .join(', ');
   }
 
   async reorderItems(order: Order) {
     const loading = await this.loadingController.create({
-      message: 'Adding items to cart...',
-      duration: 2000
+      message: 'Adding items to cart...'
     });
     await loading.present();
 
     try {
-      // Clear existing cart
-      await this.cartService.clearCart();
-      
-      // Add items to cart
-      for (const item of order.items) {
-        await this.cartService.addToCart(item.product, item.quantity, order.store);
+      const items = await this.orderService.reorder(order.id!).toPromise();
+      if (items && items.length > 0) {
+        await this.cartService.clearCart();
+        for (const item of items) {
+          await this.cartService.addToCart(item.product, item.quantity, item.store);
+        }
+        const toast = await this.toastController.create({
+          message: 'Items added to cart',
+          duration: 2000,
+          position: 'bottom',
+          color: 'success'
+        });
+        toast.present();
+        this.router.navigate(['/tabs/cart']);
       }
-      
-      loading.dismiss();
-      
+    } catch (error) {
       const toast = await this.toastController.create({
-        message: 'Items added to cart',
+        message: 'Failed to reorder items',
         duration: 2000,
         position: 'bottom',
-        buttons: [
-          {
-            text: 'View Cart',
-            role: 'cancel',
-            handler: () => {
-              this.router.navigate(['/tabs/cart']);
-            }
-          }
-        ]
+        color: 'danger'
       });
-      
-      await toast.present();
-    } catch (error) {
+      toast.present();
+    } finally {
       loading.dismiss();
-      this.showErrorToast('Failed to add items to cart');
     }
-  }
-
-  private async showErrorToast(message: string) {
-    const toast = await this.toastController.create({
-      message,
-      duration: 3000,
-      position: 'bottom',
-      color: 'danger'
-    });
-    await toast.present();
   }
 }

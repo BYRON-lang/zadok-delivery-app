@@ -7,6 +7,7 @@ export { ProductCategory };
 export interface CartItem {
   product: Product;
   quantity: number;
+  store: Store;
 }
 
 export interface Order {
@@ -41,6 +42,7 @@ export enum OrderStatus {
   PENDING = 'pending',
   CONFIRMED = 'confirmed',
   PREPARING = 'preparing',
+  IN_PROGRESS = 'in_progress',
   OUT_FOR_DELIVERY = 'out_for_delivery',
   DELIVERED = 'delivered',
   CANCELLED = 'cancelled'

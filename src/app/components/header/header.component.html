@@ -1,0 +1,17 @@
+<ion-header>
+  <ion-toolbar>
+    <div class="header-content">
+      <!-- Location Section -->
+      <ion-button *ngIf="showLocationSelector" fill="clear" class="location-button" (click)="openLocationSelector()">
+        <ion-icon slot="start" name="location-outline"></ion-icon>
+        <span class="location-text">{{ currentLocation || 'Select Location' }}</span>
+        <ion-icon slot="end" name="chevron-down-outline"></ion-icon>
+      </ion-button>
+
+      <!-- Profile Button -->
+      <ion-button *ngIf="showProfileButton" fill="clear" class="profile-button" (click)="navigateToProfile()">
+        <ion-icon name="person-circle-outline"></ion-icon>
+      </ion-button>
+    </div>
+  </ion-toolbar>
+</ion-header>

@@ -1,0 +1,51 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">
+        <ion-icon name="close-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="product-detail-content">
+  <div class="product-image-container">
+    <img [src]="product.image" [alt]="product.name" class="product-image">
+  </div>
+
+  <div class="product-info">
+    <div class="product-header">
+      <h1 class="product-name">{{ product.name }}</h1>
+      <div class="rating" *ngIf="product.rating">
+        <ion-icon name="star" color="warning"></ion-icon>
+        <ion-text color="medium">{{ product.rating }}</ion-text>
+      </div>
+    </div>
+
+    <div class="product-meta">
+      <div class="meta-item">
+        <ion-icon name="time-outline"></ion-icon>
+        <ion-text>{{ product.prepTime || '8-10 min' }}</ion-text>
+      </div>
+      <div class="meta-item" *ngIf="product.calories">
+        <ion-text>{{ product.calories }} Kcal</ion-text>
+      </div>
+    </div>
+
+    <p class="product-description">{{ product.description }}</p>
+
+    <div class="quantity-selector">
+      <ion-button fill="clear" (click)="decreaseQuantity()">
+        <ion-icon name="remove-outline"></ion-icon>
+      </ion-button>
+      <span class="quantity">{{ quantity }}</span>
+      <ion-button fill="clear" (click)="increaseQuantity()">
+        <ion-icon name="add-outline"></ion-icon>
+      </ion-button>
+    </div>
+
+    <ion-button expand="block" class="add-to-cart-button" (click)="addToCart()">
+      Add to cart - ${{ (product.price * quantity).toFixed(2) }}
+    </ion-button>
+  </div>
+</ion-content>

@@ -1,0 +1,35 @@
+<ion-header [translucent]="true" class="ion-no-border">
+  <ion-toolbar>
+    <ion-title>My Rewards</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+  <div class="rewards-container">
+    <!-- Points Summary Card -->
+    <ion-card class="points-card">
+      <ion-card-content class="ion-text-center">
+        <h1 class="points-value">{{ rewardPoints }}</h1>
+        <p class="points-label">Available Points</p>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Available Rewards -->
+    <div class="rewards-grid">
+      <ion-card *ngFor="let reward of availableRewards" 
+                [ngClass]="{'available': canRedeemReward(reward.pointsCost)}" 
+                (click)="redeemReward(reward.id)">
+        <ion-card-content>
+          <ion-icon [name]="reward.icon" size="large"></ion-icon>
+          <h2>{{ reward.name }}</h2>
+          <p>{{ reward.description }}</p>
+          <div class="points-cost">
+            <ion-chip [color]="canRedeemReward(reward.pointsCost) ? 'success' : 'medium'">
+              {{ reward.pointsCost }} points
+            </ion-chip>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </div>
+  </div>
+</ion-content>

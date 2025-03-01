@@ -27,6 +27,7 @@ export interface NotificationPreferences {
   orderUpdates: boolean;
   promotions: boolean;
   specialDeals: boolean;
+  emailNotifications: boolean;
 }
 
 export interface AuthResponse {

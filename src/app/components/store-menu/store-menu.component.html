@@ -1,0 +1,41 @@
+<div class="menu-container">
+  <div class="search-bar">
+    <ion-searchbar placeholder="Search Menu" [(ngModel)]="searchQuery" (ionChange)="onSearchChange($event)"></ion-searchbar>
+  </div>
+
+  <div class="filter-tabs">
+    <div class="select-label">Select</div>
+    <div class="tab-group">
+      <button class="tab-button" [class.active]="selectedFilter === 'All'" (click)="onFilterChange('All')">All</button>
+      <button class="tab-button" [class.active]="selectedFilter === 'Veg'" (click)="onFilterChange('Veg')">Veg</button>
+      <button class="tab-button" [class.active]="selectedFilter === 'Non-Veg'" (click)="onFilterChange('Non-Veg')">Non-Veg</button>
+    </div>
+    <div class="sort-filter">
+      <ion-button fill="clear">
+        <ion-icon slot="icon-only" name="funnel-outline"></ion-icon>
+      </ion-button>
+    </div>
+  </div>
+
+  <div class="product-list">
+    <div class="product-item" *ngFor="let product of filteredProducts">
+      <div class="product-info">
+        <div class="veg-indicator" [class.non-veg]="!product.isVeg"></div>
+        <h3 class="product-name">{{ product.name }}</h3>
+        <div class="rating" *ngIf="product.rating">
+          <ion-icon name="star"></ion-icon>
+          <span>{{ product.rating }}</span>
+          <span class="rating-count">({{ product.ratingCount }})</span>
+        </div>
+        <div class="price">₹{{ product.price }}</div>
+        <p class="description">{{ product.description }}</p>
+      </div>
+      <div class="product-action">
+        <img [src]="product.image" [alt]="product.name" class="product-image">
+        <ion-button expand="block" class="add-button" (click)="addToCart(product)">
+          Add
+        </ion-button>
+      </div>
+    </div>
+  </div>
+</div>

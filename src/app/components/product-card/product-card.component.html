@@ -1,0 +1,50 @@
+<ion-card class="product-card" (click)="onProductClick()">
+  <div class="product-image-container">
+    <img [src]="product.image" [alt]="product.name" class="product-image">
+  </div>
+  <div class="product-info">
+    <div class="product-header">
+      <h3 class="product-name">{{ product.name }}</h3>
+      <div class="price-tag">
+        <ion-text color="dark" class="price">${{ product.price.toFixed(2) }}</ion-text>
+      </div>
+    </div>
+    
+    <p class="description">{{ product.description }}</p>
+    
+    <div class="product-meta">
+      <div class="meta-item rating" *ngIf="product.rating">
+        <ion-icon name="star" color="warning"></ion-icon>
+        <ion-text color="medium">{{ product.rating }}</ion-text>
+      </div>
+      <div class="meta-item prep-time">
+        <ion-icon name="time-outline"></ion-icon>
+        <ion-text color="medium">{{ product.prepTime || '15 min' }}</ion-text>
+      </div>
+      <div class="meta-item calories" *ngIf="product.calories">
+        <ion-text color="medium">{{ product.calories }} Kcal</ion-text>
+      </div>
+    </div>
+
+    <div class="quantity-controls" *ngIf="quantity > 0">
+      <ion-button fill="clear" (click)="removeFromCart(); $event.stopPropagation()">
+        <ion-icon name="remove-outline"></ion-icon>
+      </ion-button>
+      <span class="quantity">{{ quantity }}</span>
+      <ion-button fill="clear" (click)="addToCart(); $event.stopPropagation()">
+        <ion-icon name="add-outline"></ion-icon>
+      </ion-button>
+    </div>
+
+    <ion-button 
+      *ngIf="quantity === 0"
+      expand="block" 
+      class="add-button" 
+      fill="solid" 
+      color="primary"
+      (click)="addToCart(); $event.stopPropagation()">
+      <ion-icon name="add-outline" slot="start"></ion-icon>
+      Add to Cart
+    </ion-button>
+  </div>
+</ion-card>

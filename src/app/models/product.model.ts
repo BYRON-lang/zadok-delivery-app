@@ -7,6 +7,7 @@ export interface Product {
   category: string;
   storeId: string;
   available: boolean;
+  quantity: number;
 }
 
 export enum ProductCategory {

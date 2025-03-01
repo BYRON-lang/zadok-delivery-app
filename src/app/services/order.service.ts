@@ -44,6 +44,44 @@ export class OrderService {
 
   private generateMockOrders(user: User): Order[] {
     // This would be replaced by actual order history from an API
+    const chickenInnStore = {
+      id: '1',
+      name: 'Chicken Inn',
+      description: 'Zimbabwe\'s favorite fried chicken restaurant',
+      address: 'Sam Nujoma Street, Harare',
+      image: 'assets/images/banners/chicken inn banner.jfif',
+      categories: [ProductCategory.FOOD],
+      rating: 4.5,
+      deliveryTime: '25-35 min',
+      deliveryFee: 2.50,
+      isOpen: true,
+      openingHours: '08:00',
+      closingHours: '22:00',
+      tags: ['Fast Food', 'Chicken', 'Burgers'],
+      featured: true,
+      city: 'Harare',
+      province: 'Harare'
+    };
+
+    const clicksStore = {
+      id: '3',
+      name: 'Clicks Pharmacy',
+      description: 'Your health is our priority',
+      address: 'Borrowdale Road, Harare',
+      image: 'assets/images/banners/grocery.jfif',
+      categories: [ProductCategory.MEDICINE],
+      rating: 4.7,
+      deliveryTime: '30-45 min',
+      deliveryFee: 2.00,
+      isOpen: true,
+      openingHours: '08:00',
+      closingHours: '20:00',
+      tags: ['Pharmacy', 'Medicine', 'Health'],
+      featured: false,
+      city: 'Harare',
+      province: 'Harare'
+    };
+
     return [
       {
         id: '1001',
@@ -57,9 +95,11 @@ export class OrderService {
               image: 'assets/images/products/chicken-inn-2piece.jpg',
               category: ProductCategory.FOOD,
               storeId: '1',
-              available: true
+              available: true,
+              quantity: 100
             },
-            quantity: 2
+            quantity: 2,
+            store: chickenInnStore
           },
           {
             product: {
@@ -70,30 +110,15 @@ export class OrderService {
               image: 'assets/images/products/chicken-inn-burger.jpg',
               category: ProductCategory.FOOD,
               storeId: '1',
-              available: true
+              available: true,
+              quantity: 100
             },
-            quantity: 1
+            quantity: 1,
+            store: chickenInnStore
           }
         ],
         user: user,
-        store: {
-          id: '1',
-          name: 'Chicken Inn',
-          description: 'Zimbabwe\'s favorite fried chicken restaurant',
-          address: 'Sam Nujoma Street, Harare',
-          image: 'assets/images/stores/chicken-inn.jpg',
-          categories: [ProductCategory.FOOD],
-          rating: 4.5,
-          deliveryTime: '25-35 min',
-          deliveryFee: 2.50,
-          isOpen: true,
-          openingHours: '08:00',
-          closingHours: '22:00',
-          tags: ['Fast Food', 'Chicken', 'Burgers'],
-          featured: true,
-          city: 'Harare',
-          province: 'Harare'
-        },
+        store: chickenInnStore,
         status: OrderStatus.DELIVERED,
         subtotal: 13.98,
         total: 16.48,
@@ -117,9 +142,11 @@ export class OrderService {
               image: 'assets/images/products/paracetamol.jpg',
               category: ProductCategory.MEDICINE,
               storeId: '3',
-              available: true
+              available: true,
+              quantity: 500
             },
-            quantity: 1
+            quantity: 1,
+            store: clicksStore
           },
           {
             product: {
@@ -130,45 +157,24 @@ export class OrderService {
               image: 'assets/images/products/vitamin-c.jpg',
               category: ProductCategory.MEDICINE,
               storeId: '3',
-              available: true
+              available: true,
+              quantity: 400
             },
-            quantity: 1
+            quantity: 1,
+            store: clicksStore
           }
         ],
         user: user,
-        store: {
-          id: '3',
-          name: 'Clicks Pharmacy',
-          description: 'Your health is our priority',
-          address: 'Borrowdale Road, Harare',
-          image: 'assets/images/stores/clicks-pharmacy.jpg',
-          categories: [ProductCategory.MEDICINE],
-          rating: 4.7,
-          deliveryTime: '30-45 min',
-          deliveryFee: 2.00,
-          isOpen: true,
-          openingHours: '08:00',
-          closingHours: '18:00',
-          tags: ['Pharmacy', 'Health', 'Medicines'],
-          city: 'Harare',
-          province: 'Harare'
-        },
-        status: OrderStatus.OUT_FOR_DELIVERY,
+        store: clicksStore,
+        status: OrderStatus.CONFIRMED,
         subtotal: 9.49,
         total: 11.49,
         deliveryAddress: user.addresses ? user.addresses[0].fullAddress : '123 Main St, Harare',
         deliveryFee: 2.00,
         serviceFee: 0,
-        paymentMethod: PaymentMethod.VISA,
-        createdAt: new Date(new Date().getTime() - 30 * 60 * 1000), // 30 minutes ago
-        estimatedDeliveryTime: new Date(new Date().getTime() + 15 * 60 * 1000), // 15 minutes from now
-        driverId: 'D1001',
-        driverName: 'Tendai Moyo',
-        driverPhone: '+263771234567',
-        driverLocation: {
-          latitude: -17.810901,
-          longitude: 31.058216
-        },
+        paymentMethod: PaymentMethod.ECOCASH,
+        createdAt: new Date(), // Current time
+        estimatedDeliveryTime: new Date(new Date().getTime() + 45 * 60 * 1000), // 45 minutes from now
         isPickup: false
       }
     ];

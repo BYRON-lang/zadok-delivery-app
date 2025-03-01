@@ -13,12 +13,7 @@
     <ion-tab-button tab="cart">
       <ion-icon aria-hidden="true" name="cart-outline"></ion-icon>
       <ion-label>Cart</ion-label>
-      <ion-badge color="danger" *ngIf="cartItemCount$ | async as count">{{ count > 0 ? count : '' }}</ion-badge>
-    </ion-tab-button>
-
-    <ion-tab-button tab="orders">
-      <ion-icon aria-hidden="true" name="receipt-outline"></ion-icon>
-      <ion-label>Orders</ion-label>
+      <ion-badge color="danger" *ngIf="cartItemCount > 0">{{cartItemCount}}</ion-badge>
     </ion-tab-button>
 
     <ion-tab-button tab="profile">

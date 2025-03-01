@@ -1,0 +1,100 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar class="transparent-toolbar">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title class="ion-text-center">
+      <span class="gradient-text">Smart Recommendations</span>
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="refreshRecommendations()">
+        <ion-icon name="refresh-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="modern-content">
+  <ng-container *ngIf="recommendations$ | async as recommendations; else loading">
+    <div class="greeting-section">
+      <h2>{{ getTimeOfDayGreeting() }}</h2>
+      <p class="context-info">Based on {{ recommendations.context.weather }} weather and your preferences</p>
+    </div>
+
+    <ion-segment [(ngModel)]="selectedSegment" (ionChange)="segmentChanged($event)" class="custom-segment">
+      <ion-segment-button value="products">
+        <ion-label>Products</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="stores">
+        <ion-label>Stores</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+
+    <div [ngSwitch]="selectedSegment" class="segment-content">
+      <!-- Products Section -->
+      <div *ngSwitchCase="'products'" class="products-grid">
+        <ion-card *ngFor="let product of recommendations.products" class="product-card">
+          <div class="product-image-container">
+            <img [src]="product.image" [alt]="product.name">
+            <div class="confidence-badge">
+              {{ (product.confidence * 100).toFixed(0) }}% Match
+            </div>
+          </div>
+          <ion-card-header>
+            <ion-card-title>{{ product.name }}</ion-card-title>
+            <ion-card-subtitle>{{ product.description }}</ion-card-subtitle>
+          </ion-card-header>
+          <ion-card-content>
+            <p class="recommendation-reason">{{ product.reasonForRecommendation }}</p>
+            <div class="price-action">
+              <span class="price">${{ product.price.toFixed(2) }}</span>
+              <ion-button fill="solid" (click)="addToCart(product)">
+                <ion-icon name="cart-outline" slot="start"></ion-icon>
+                Add to Cart
+              </ion-button>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </div>
+
+      <!-- Stores Section -->
+      <div *ngSwitchCase="'stores'" class="stores-grid">
+        <ion-card *ngFor="let store of recommendations.stores" class="store-card">
+          <div class="store-image-container">
+            <img [src]="store.image" [alt]="store.name">
+            <div class="ar-badge" *ngIf="store.arContent" (click)="viewARContent(store)">
+              <ion-icon name="cube-outline"></ion-icon>
+              AR View
+            </div>
+          </div>
+          <ion-card-header>
+            <ion-card-title>{{ store.name }}</ion-card-title>
+            <ion-card-subtitle>
+              <ion-icon name="star"></ion-icon>
+              {{ store.rating }} · {{ store.deliveryTime }}
+            </ion-card-subtitle>
+          </ion-card-header>
+          <ion-card-content>
+            <p class="recommendation-reason">{{ store.reasonForRecommendation }}</p>
+            <div class="store-tags">
+              <ion-chip *ngFor="let tag of store.tags">
+                {{ tag }}
+              </ion-chip>
+            </div>
+            <ion-button expand="block" (click)="viewStore(store)">
+              <ion-icon name="storefront-outline" slot="start"></ion-icon>
+              View Store
+            </ion-button>
+          </ion-card-content>
+        </ion-card>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-template #loading>
+    <div class="loading-container">
+      <ion-spinner name="crescent"></ion-spinner>
+      <p>Loading smart recommendations...</p>
+    </div>
+  </ng-template>
+</ion-content>

@@ -1,0 +1,27 @@
+<ion-card>
+  <ion-card-header>
+    <ion-card-title>Order History</ion-card-title>
+  </ion-card-header>
+  <ion-card-content>
+    <ion-list lines="full">
+      <ion-item *ngFor="let order of orders" [routerLink]="['/orders', order.id]">
+        <ion-thumbnail slot="start">
+          <img [src]="order.items[0].store.image || 'assets/images/default-store.png'" [alt]="order.store.name">
+        </ion-thumbnail>
+        <ion-label>
+          <h2>{{ order.store.name }}</h2>
+          <p>{{ order.items.length }} items • ${{ order.total.toFixed(2) }}</p>
+          <p>{{ order.createdAt | date:'medium' }}</p>
+        </ion-label>
+        <ion-badge [color]="getOrderStatusColor(order.status)" slot="end">
+          {{ order.status }}
+        </ion-badge>
+      </ion-item>
+      <ion-item *ngIf="orders.length === 0">
+        <ion-label color="medium" class="ion-text-center">
+          No orders yet
+        </ion-label>
+      </ion-item>
+    </ion-list>
+  </ion-card-content>
+</ion-card>

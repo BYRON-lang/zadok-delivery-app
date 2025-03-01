@@ -1,18 +1,10 @@
-<ion-header [translucent]="true" class="zadok-header">
-  <ion-toolbar>
-    <div class="location-container">
-      <ion-icon name="home" slot="start"></ion-icon>
-      <div class="location-text">
-        <ion-text color="medium" class="location-label">Deliver to</ion-text>
-        <ion-text class="address">Home • 123 Example Street</ion-text>
-      </div>
-    </div>
-    <ion-buttons slot="end">
-      <ion-button>
-        <ion-icon name="person-circle-outline" slot="icon-only"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-  </ion-toolbar>
+<app-header
+  [showLocationSelector]="true"
+  [currentLocation]="address"
+  [showProfileButton]="true">
+</app-header>
+
+<ion-content [fullscreen]="true">
   <ion-toolbar>
     <ion-searchbar 
       placeholder="Search for burgers, pizza, groceries..." 
@@ -24,17 +16,14 @@
       animated>
     </ion-searchbar>
   </ion-toolbar>
-</ion-header>
 
-<div class="promo-banner">
-  <img src="assets/images/promo-banner.jpg" alt="Special offer on burgers">
-  <div class="promo-content">
-    <h2>Hungry?</h2>
-    <p>Get up to 50% off on your favorite burgers</p>
+  <div class="promo-banner">
+    <img src="assets/images/promo-banner.jpg" alt="Special offer on burgers">
+    <div class="promo-content">
+      <h2>Hungry?</h2>
+      <p>Get up to 50% off on your favorite burgers</p>
+    </div>
   </div>
-</div>
-
-<ion-content [fullscreen]="true">
   <ion-segment [(ngModel)]="selectedSegment" (ionChange)="segmentChanged()">
     <ion-segment-button value="all">
       <ion-label>All</ion-label>

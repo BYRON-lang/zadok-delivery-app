@@ -1,0 +1,56 @@
+<app-header
+  [title]="'Track Order'"
+  [showBackButton]="true"
+  [showProfileButton]="false">
+</app-header>
+
+<ion-content [fullscreen]="true">
+  <div class="tracking-container">
+    <!-- 3D Visualization Map -->
+    <div class="map-container">
+      <canvas #mapCanvas></canvas>
+    </div>
+
+    <!-- Order Status Card -->
+    <ion-card class="status-card">
+      <ion-card-content>
+        <div class="status-header">
+          <ion-chip [color]="getOrderStatus() === 'DELIVERED' ? 'success' : 'primary'">
+            {{ getOrderStatus() }}
+          </ion-chip>
+          <div class="estimated-time">
+            <ion-icon name="time-outline"></ion-icon>
+            <span>{{ getEstimatedTime() }}</span>
+          </div>
+        </div>
+
+        <!-- Driver Info -->
+        <div class="driver-info" *ngIf="activeOrder?.driverName">
+          <ion-avatar>
+            <img src="assets/images/driver-placeholder.jpg" alt="Driver">
+          </ion-avatar>
+          <div class="driver-details">
+            <h3>Your Driver</h3>
+            <p>{{ getDriverInfo() }}</p>
+          </div>
+        </div>
+
+        <!-- Order Progress -->
+        <div class="order-progress">
+          <div class="progress-step" [class.completed]="activeOrder?.status !== 'PENDING'">
+            <ion-icon name="checkmark-circle"></ion-icon>
+            <span>Order Confirmed</span>
+          </div>
+          <div class="progress-step" [class.completed]="activeOrder?.status === 'OUT_FOR_DELIVERY' || activeOrder?.status === 'DELIVERED'">
+            <ion-icon name="bicycle"></ion-icon>
+            <span>Out for Delivery</span>
+          </div>
+          <div class="progress-step" [class.completed]="activeOrder?.status === 'DELIVERED'">
+            <ion-icon name="flag"></ion-icon>
+            <span>Delivered</span>
+          </div>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  </div>
+</ion-content>
